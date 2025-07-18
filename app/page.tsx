@@ -1,103 +1,176 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+import { stations } from "../data/stations";
+import { useHowlerAudio } from "./useHowlerAudio";
+import { Play, Pause, Square } from "react-feather";
+
+const CIRCLE_RADIUS_VMIN = 40;
+const ICON_SIZE_VMIN = 12;
+
+function getPosition(index: number, total: number) {
+  const angle = ((index / total) * 2 * Math.PI) - Math.PI / 2;
+  const x = 50 + CIRCLE_RADIUS_VMIN * Math.cos(angle);
+  const y = 50 + CIRCLE_RADIUS_VMIN * Math.sin(angle);
+  return {
+    left: `calc(${x.toFixed(3)}% - ${(ICON_SIZE_VMIN / 2).toFixed(3)}vmin)`,
+    top: `calc(${y.toFixed(3)}% - ${(ICON_SIZE_VMIN / 2).toFixed(3)}vmin)`,
+  };
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [selected, setSelected] = useState(0);
+  const station = stations[selected];
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const handleStationSelect = (index: number) => {
+    setSelected(index);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setSelected(index);
+    }
+  };
+
+  return (
+    <main className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-gta-dark px-4 pt-[4vmin]">
+      {/* Background Image */}
+      <img
+        src={station.assets.background}
+        alt="background"
+        className="absolute inset-0 w-full h-full object-cover scale-[1.05] brightness-[0.9] blur-[1px]"
+        loading="lazy"
+        draggable={false}
+      />
+      
+      {/* Faded overlay */}
+      <div className="absolute inset-0 z-10 faded-bg" />
+
+      {/* Top Center Station Info */}
+      <div className="absolute left-1/2 top-[6vmin] -translate-x-1/2 z-20 text-center px-6 py-3 bg-black/50 backdrop-blur-sm rounded-lg shadow-md shadow-black max-w-[90vw]">
+        <h1 className="font-black text-white text-4xl md:text-5xl lg:text-6xl neon-glow">
+          {station.name}
+        </h1>
+        <p className="mt-1 text-white/80 text-lg md:text-xl lg:text-2xl">
+          {station.description}
+        </p>
+      </div>
+
+      {/* The radio station wheel */}
+      <div
+        className="relative z-30 flex items-center justify-center"
+        style={{
+          width: "80vmin",
+          height: "80vmin",
+          minWidth: "400px",
+          minHeight: "400px",
+        }}
+      >
+        {stations.map((s, i) => {
+          const position = getPosition(i, stations.length);
+          const isSelected = i === selected;
+          
+          return (
+            <button
+              key={s.slug}
+              aria-label={`Select ${s.name}`}
+              className={`absolute transition-all duration-300 ease-in-out
+                flex items-center justify-center overflow-hidden
+                rounded-full border-2 aspect-square outline-none focus:outline-none
+                ${ 
+                  isSelected
+                    ? "z-40 scale-130 border-gta-neon ring-4 ring-gta-neon ring-offset-2 ring-offset-black shadow-[0_0_25px_#f472b6]"
+                    : "border-white/50 hover:border-gta-neon hover:ring-2 hover:ring-gta-neon hover:scale-105"
+                }
+              `}
+              tabIndex={0}
+              style={{
+                ...position,
+                width: `${ICON_SIZE_VMIN}vmin`,
+                height: `${ICON_SIZE_VMIN}vmin`,
+                minWidth: "60px",
+                minHeight: "60px",
+              }}
+              onClick={() => handleStationSelect(i)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
+            >
+              <div className="w-full h-full rounded-full overflow-hidden">
+                <img
+                  src={s.assets.logo}
+                  alt={s.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  draggable={false}
+                />
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Bottom Center Audio Player */}
+      <div className="absolute z-40 top-[calc(50%+45vmin)] left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 pointer-events-auto">
+        <div className="flex items-center gap-4 bg-black/60 p-4 rounded-xl border border-white/20 backdrop-blur-sm max-w-[90vw] sm:max-w-md overflow-hidden shadow-md shadow-black">
+          <div className="w-[64px] h-[64px] md:w-[80px] md:h-[80px] rounded-lg overflow-hidden shrink-0">
+            <img
+              src={station.assets.songImage}
+              alt={station.song.title}
+              className="w-full h-full object-cover"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+          <div className="flex flex-col truncate text-left">
+            <span className="font-semibold text-white text-lg md:text-xl truncate">
+              {station.song.title}
+            </span>
+            <span className="text-white/70 text-sm md:text-base truncate">
+              {station.song.artist || "Unknown Artist"}
+            </span>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <AudioControls key={station.slug} songUrl={station.assets.song} />
+      </div>
+
+      {/* Screen reader announcements */}
+      <div className="sr-only" aria-live="polite">
+        Now playing: {station.song.title} by {station.song.artist || "Unknown Artist"} on {station.name}
+      </div>
+    </main>
+  );
+}
+
+function AudioControls({ songUrl }: { songUrl: string }) {
+  const { playing, play, pause, stop } = useHowlerAudio(songUrl);
+  
+  return (
+    <div className="flex gap-3">
+      <button
+        className={`bg-white/20 hover:bg-gta-neon/30 rounded-full p-3 border border-white/40 transition-all duration-200 neon-glow hover:scale-110 ${playing ? 'animate-pulse' : ''}`}
+        aria-label="Play"
+        onClick={play}
+        type="button"
+      >
+        <Play 
+          color={playing ? "#f472b6" : "#fff"} 
+          size={24} 
+          strokeWidth={2.5} 
+        />
+      </button>
+      <button
+        className="bg-white/20 hover:bg-gta-neon/30 rounded-full p-3 border border-white/40 transition-all duration-200 neon-glow hover:scale-110"
+        aria-label="Pause"
+        onClick={pause}
+        type="button"
+      >
+        <Pause color="#fff" size={24} strokeWidth={2.5} />
+      </button>
+      <button
+        className="bg-white/20 hover:bg-gta-neon/30 rounded-full p-3 border border-white/40 transition-all duration-200 neon-glow hover:scale-110"
+        aria-label="Stop"
+        onClick={stop}
+        type="button"
+      >
+        <Square color="#fff" size={24} strokeWidth={2.5} />
+      </button>
     </div>
   );
 }
