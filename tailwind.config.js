@@ -20,7 +20,7 @@ module.exports = {
         'xs': '2px',
       },
       fontFamily: {
-        'sans': ['Inter', 'system-ui', 'sans-serif'],
+        satoshi: ['var(--font-satoshi)'],
       },
       spacing: {
         '18': '4.5rem',

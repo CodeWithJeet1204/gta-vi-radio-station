@@ -20,9 +20,36 @@ html, body {
   }
   
   .faded-bg {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.65);
     backdrop-filter: blur(2px);
   }
+  
+  .neon-glow {
+    text-shadow: 0 0 4px #f472b6, 0 0 10px #f472b6;
+    box-shadow: 0 0 12px rgba(244, 114, 182, 0.4), 0 0 24px rgba(244, 114, 182, 0.3);
+  }
+  .animate-spin-slow {
+    animation: spin 20s linear infinite;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .animate-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 15px #f472b6, 0 0 30px #f472b6;
+    }
+    50% {
+      box-shadow: 0 0 30px #f472b6, 0 0 60px #f472b6;
+    }
+  }
+}
+
+img {
+  image-rendering: auto;
 }
 
 /* Additional GTA-style effects */
@@ -41,4 +68,14 @@ html, body {
 
 .radio-station-button.selected {
   z-index: 50;
+}
+
+.glass-btn::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+  pointer-events: none;
+  z-index: 1;
 }

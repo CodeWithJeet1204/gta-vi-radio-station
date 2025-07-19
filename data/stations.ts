@@ -12,7 +12,6 @@ export type Station = {
   };
   song: {
     title: string;
-    artist: string;  // leave blank if N/A
   };
 };
 
@@ -36,7 +35,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "305 Degrees",
-      artist: "",
+      
     },
   },
   {
@@ -51,7 +50,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Booty Bounce Boulevard",
-      artist: "",
+      
     },
   },
   {
@@ -66,7 +65,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Neon Dreams",
-      artist: "",
+      
     },
   },
   {
@@ -81,7 +80,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Fuego en la Pista",
-      artist: "",
+      
     },
   },
   {
@@ -96,7 +95,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Corazones en el Malecón",
-      artist: "",
+      
     },
   },
   {
@@ -111,7 +110,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Callejón Oscuro",
-      artist: "",
+      
     },
   },
   {
@@ -126,7 +125,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Golden Hour Glow",
-      artist: "",
+      
     },
   },
   {
@@ -141,7 +140,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Midnight Whispers",
-      artist: "",
+      
     },
   },
   {
@@ -156,7 +155,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Electric Sunset",
-      artist: "",
+      
     },
   },
   {
@@ -171,7 +170,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Sidewalk Serenade",
-      artist: "",
+      
     },
   },
   {
@@ -186,7 +185,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Iron Pulse",
-      artist: "",
+      
     },
   },
   {
@@ -201,7 +200,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Digital Mirage",
-      artist: "",
+      
     },
   },
   {
@@ -216,7 +215,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Voltage Rush",
-      artist: "",
+      
     },
   },
   {
@@ -231,7 +230,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Subterranean Flow",
-      artist: "",
+      
     },
   },
   {
@@ -246,7 +245,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Funkadelic Nights",
-      artist: "",
+      
     },
   },
   {
@@ -261,7 +260,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Mirrorball Dreams",
-      artist: "",
+      
     },
   },
   {
@@ -276,7 +275,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Island Breeze",
-      artist: "",
+      
     },
   },
   {
@@ -291,7 +290,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Bayou Trails",
-      artist: "",
+      
     },
   },
   {
@@ -306,7 +305,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Midnight on the Bay",
-      artist: "",
+      
     },
   },
   {
@@ -321,7 +320,7 @@ export const stations: Station[] = [
     },
     song: {
       title: "Twilight Drift",
-      artist: "",
+      
     },
   },
 ];
